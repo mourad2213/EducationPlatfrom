@@ -19,7 +19,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Instructors
-        public async Task<IActionResult> view()
+        public async Task<IActionResult> Index()
         {
             return View(await _context.Instructors.ToListAsync());
         }
