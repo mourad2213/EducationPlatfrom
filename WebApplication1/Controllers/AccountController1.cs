@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
                         switch (user.AccountType)
                         {
                             case AccountType.Learner:
-                                return RedirectToAction("Index", "Learner");
+                                return RedirectToAction("Index", "Learners");
                             case AccountType.Admin:
                                 return RedirectToAction("Index", "Admin");
                             case AccountType.Instructor:
