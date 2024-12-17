@@ -1,0 +1,32 @@
+﻿@model WebApplication1.Models.AccountViewModel
+
+@{
+    ViewData["Title"] = "Account";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="account-details">
+    <h3>Your Account Information</h3>
+
+    <p><strong>Full Name:</strong> @Model.Fullname</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Account Type:</strong> @Model.AccountType</p>
+  
+
+    <hr />
+    <h4>Edit Account Details</h4>
+    <form asp-action="EditAccount">
+        <div class="form-group">
+            <label for="Fullname">Full Name</label>
+            <input type="text" id="Fullname" name="Fullname" value="@Model.Fullname" class="form-control" />
+        </div>
+        <div class="form-group">
+            
+ 
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+    </form>
+</div>

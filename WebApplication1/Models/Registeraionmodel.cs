@@ -12,9 +12,9 @@ namespace WebApplication1.Models
 
     public enum AccountType
     {
-        Learner,
-        Admin,
-        Instructor
+        Learner=1,
+        Admin=2,
+        Instructor=3
     }
 
     public class Registeraionmodel
