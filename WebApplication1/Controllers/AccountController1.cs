@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
                         switch (user.AccountType)
                         {
                             case AccountType.Learner:
-                                return RedirectToAction("Index", "Learners");
+                                return RedirectToAction("Account", "AccountController1");
                             case AccountType.Admin:
                                 return RedirectToAction("Index", "Admin");
                             case AccountType.Instructor:
@@ -94,6 +94,7 @@ namespace WebApplication1.Controllers
                     Fullname = model.Fullname,
                     ExperienceLevel = model.ExperienceLevel,
                     AccountType = model.AccountType,
+
                     EmailConfirmed = true
                 };
                 // Create the user in the database and hash the password automatically
@@ -101,6 +102,46 @@ namespace WebApplication1.Controllers
 
                 if (result.Succeeded)
                 {
+                    // Create corresponding Learner, Instructor, or Admin entry based on AccountType
+                    switch (model.AccountType)
+                    {
+                        case AccountType.Learner:
+                            var learner = new Learner
+                            {
+                                LearnerName = model.Fullname,
+                                LearnerGender = model.Gender,
+                                CountryOfOrigin = model.CountryOfOrigin,
+
+                                //birthdate
+                                // Set other Learner-specific properties here
+                            };
+                            _context.Learners.Add(learner);
+                            break;
+
+                        case AccountType.Instructor:
+                            var instructor = new Instructor
+                            {
+                                InstructorName = model.Fullname,
+                                //accountemail
+                                // Set other Instructor-specific properties here
+                            };
+                            _context.Instructors.Add(instructor);
+                            break;
+
+                            /*case AccountType.Admin:
+                                var admin = new Admin
+                                {
+                                    UserId = user.Id
+                                    // Set other Admin-specific properties here
+                                };
+                                _context.Admins.Add(admin);
+                                break;*/
+                    }
+
+                    // Save the changes to the database
+                    await _context.SaveChangesAsync();
+
+                    // Redirect to login page
                     return RedirectToAction("Login", "AccountController1");
                 }
                 else
@@ -114,5 +155,66 @@ namespace WebApplication1.Controllers
             }
             return View(model);
         }
+        // Action to display account details
+        public async Task<IActionResult> Account()
+        {
+            // Get the current logged-in user
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            // Create a view model to pass user details to the view
+            var model = new AccountViewModel
+            {
+                Fullname = user.Fullname,
+                Email = user.Email,
+                AccountType = user.AccountType,
+                
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditAccount(AccountViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Get the current logged-in user
+                var user = await _userManager.GetUserAsync(User);
+
+                if (user == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                // Update user details
+                user.Fullname = model.Fullname;
+                
+
+                // Save the updated user information to the database
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    // Optionally, you can add a success message here
+                    TempData["SuccessMessage"] = "Your account has been updated.";
+                    return RedirectToAction("Account");
+                }
+                else
+                {
+                    // Handle errors (e.g., display validation messages)
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return View("Account", model);
+        }
+
     }
+
 }
