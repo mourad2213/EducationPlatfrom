@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Controllers;
 using WebApplication1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,9 +23,6 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Seed roles if they don't exist
-await SeedRolesAsync(app);
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -47,19 +44,3 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
-
-// Seed roles on application startup
-static async Task SeedRolesAsync(WebApplication app)
-{
-    var roleManager = app.Services.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roleNames = { "Admin", "Instructor", "Learner" };
-
-    foreach (var roleName in roleNames)
-    {
-        var roleExist = await roleManager.RoleExistsAsync(roleName);
-        if (!roleExist)
-        {
-            await roleManager.CreateAsync(new IdentityRole(roleName));
-        }
-    }
-}

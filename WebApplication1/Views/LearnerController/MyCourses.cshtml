@@ -1,0 +1,16 @@
+﻿@model IEnumerable<WebApplication1.Models.Course>
+
+<h2>Your Enrolled Courses</h2>
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var course in Model)
+        {
+            <li>@course.CourseTitle</li>
+        }
+    </ul>
+}
+else
+{
+    <p>You are not enrolled in any courses yet.</p>
+}

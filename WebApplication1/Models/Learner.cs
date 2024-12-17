@@ -22,7 +22,7 @@ public partial class Learner
     public int? CourseId { get; set; }
 
     public int? BoardId { get; set; }
-
+    public string UserId { get; set; }
     public virtual Course? Course { get; set; }
 
     public virtual ICollection<CourseEnrollment> CourseEnrollments { get; set; } = new List<CourseEnrollment>();
@@ -62,4 +62,5 @@ public partial class Learner
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
     public virtual ICollection<Survey> Surveys { get; set; } = new List<Survey>();
+    public virtual UserAcccount User { get; set; }
 }

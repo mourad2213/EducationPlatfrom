@@ -11,5 +11,7 @@ namespace WebApplication1.Models
         public ExperienceLevel ExperienceLevel { get; set; }
 
         public AccountType AccountType { get; set; }
+
+
     }
 }
