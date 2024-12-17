@@ -1,0 +1,20 @@
+﻿@model LearnerProfileViewModel
+
+<h2>@Model.Fullname's Profile</h2>
+
+<h3>My Enrolled Courses</h3>
+@if (Model.EnrolledCourses.Any())
+{
+    <ul>
+        @foreach (var enrollment in Model.EnrolledCourses)
+        {
+            <li>@enrollment.Course.CourseTitle</li>
+        }
+    </ul>
+}
+else
+{
+    <p>You are not enrolled in any courses.</p>
+}
+
+<a href="@Url.Action("ViewCourses", "LearnerController")">View Available Courses</a>

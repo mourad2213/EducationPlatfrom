@@ -35,5 +35,7 @@ namespace WebApplication1.Models
 
         [Required(ErrorMessage = "Account type is required")]
         public AccountType AccountType { get; set; }
+
+
     }
 }
