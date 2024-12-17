@@ -1,0 +1,54 @@
+﻿@model IEnumerable<WebApplication1.Models.Notification>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MessageBody)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UrgencyLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Learner)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MessageBody)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UrgencyLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Learner.LearnerId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.NotificationId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.NotificationId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.NotificationId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

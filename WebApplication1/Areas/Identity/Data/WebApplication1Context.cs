@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Controllers;
+using WebApplication1.Models;
+
+//using WebApplication1.login;
 
 namespace WebApplication1.Areas.Identity.Data;
 
@@ -9,7 +13,9 @@ public class WebApplication1Context : IdentityDbContext<IdentityUser>
     public WebApplication1Context(DbContextOptions<WebApplication1Context> options)
         : base(options)
     {
+
     }
+    public DbSet<UserAcccount> UserAcccount { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -19,7 +19,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Learners
-        public async Task<IActionResult> view()
+        public async Task<IActionResult> Index()
         {
             var milestoneContext = _context.Learners.Include(l => l.Course).Include(l => l.Leaderboard);
             return View(await milestoneContext.ToListAsync());
@@ -49,7 +49,7 @@ namespace WebApplication1.Controllers
         public IActionResult Create()
         {
             ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId");
-            ViewData["CourseId"] = new SelectList(_context.Leaderboards, "CourseId", "CourseId");
+            ViewData["BoardId"] = new SelectList(_context.Leaderboards, "BoardId", "BoardId");
             return View();
         }
 
@@ -67,7 +67,7 @@ namespace WebApplication1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", learner.CourseId);
-            ViewData["CourseId"] = new SelectList(_context.Leaderboards, "CourseId", "CourseId", learner.CourseId);
+            ViewData["BoardId"] = new SelectList(_context.Leaderboards, "BoardId", "BoardId", learner.BoardId);
             return View(learner);
         }
 
@@ -85,7 +85,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", learner.CourseId);
-            ViewData["CourseId"] = new SelectList(_context.Leaderboards, "CourseId", "CourseId", learner.CourseId);
+            ViewData["BoardId"] = new SelectList(_context.Leaderboards, "BoardId", "BoardId", learner.BoardId);
             return View(learner);
         }
 
@@ -122,7 +122,7 @@ namespace WebApplication1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", learner.CourseId);
-            ViewData["CourseId"] = new SelectList(_context.Leaderboards, "CourseId", "CourseId", learner.CourseId);
+            ViewData["BoardId"] = new SelectList(_context.Leaderboards, "BoardId", "BoardId", learner.BoardId);
             return View(learner);
         }
 
@@ -165,5 +165,36 @@ namespace WebApplication1.Controllers
         {
             return _context.Learners.Any(e => e.LearnerId == id);
         }
+
+        // GET: Learners/JoinQuest
+        public async Task<IActionResult> JoinQuest()
+        {
+            var quests = await _context.CollaborativeQuests.Include(cq => cq.Quest).ToListAsync();
+            return View(quests);
+        }
+
+        // POST: Learners/JoinQuest/5
+        //[HttpPost]
+        // [ValidateAntiForgeryToken]
+        /* public async Task<IActionResult> JoinQuest(int learnerId, int questId)
+         {
+             var quest = await _context.CollaborativeQuests.FindAsync(questId);
+             if (quest == null || quest.MaxParticipants.HasValue && quest.MaxParticipants <= _context.Learners.Count(l => l.LearnerQuests == questId))
+             {
+                 return BadRequest("Cannot join quest.");
+             }
+
+             var learner = await _context.Learners.FindAsync(learnerId);
+             if (learner == null)
+             {
+                 return NotFound();
+             }
+
+             learner.LearnerQuests = questId;
+             await _context.SaveChangesAsync();
+
+             return RedirectToAction(nameof(Index));
+         }*/
+        //}
     }
 }

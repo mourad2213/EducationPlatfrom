@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Controllers;
+//using WebApplication1.login;
 namespace WebApplication1.Models;
 
-public partial class MilestoneContext : DbContext
+public partial class MilestoneContext : IdentityDbContext<UserAcccount>
 {
     public MilestoneContext()
     {
@@ -13,6 +16,8 @@ public partial class MilestoneContext : DbContext
         : base(options)
     {
     }
+
+    public DbSet<UserAcccount> UserAcccounts { get; set; }
 
     public virtual DbSet<Achievement> Achievements { get; set; }
 
@@ -87,6 +92,7 @@ public partial class MilestoneContext : DbContext
     public virtual DbSet<Survey> Surveys { get; set; }
 
     public virtual DbSet<SurveysQuestion> SurveysQuestions { get; set; }
+    public IEnumerable<object> UserAcccount { get; internal set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
