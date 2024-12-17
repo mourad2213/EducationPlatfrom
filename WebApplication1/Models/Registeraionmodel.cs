@@ -5,16 +5,16 @@ namespace WebApplication1.Models
 {
     public enum ExperienceLevel
     {
-        Beginner,
-        Intermediate,
-        Advanced
+        Beginner,//0
+        Intermediate,//1
+        Advanced//2
     }
 
     public enum AccountType
     {
-        Learner,
-        Admin,
-        Instructor
+        Learner,//0
+        Admin,//1
+        Instructor//2
     }
 
     public class Registeraionmodel
@@ -33,7 +33,8 @@ namespace WebApplication1.Models
         [Required(ErrorMessage = "Birthday is required")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
-
+        [Required(ErrorMessage = "Phoneenumber is required")]
+        public int PhoneNumber { get; set; }
         [Required(ErrorMessage = "Gender is required")]
         public string Gender { get; set; }
 

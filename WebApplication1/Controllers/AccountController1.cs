@@ -26,6 +26,8 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Login(Loginviewmodel model)
         {
             if (ModelState.IsValid)
@@ -36,7 +38,6 @@ namespace WebApplication1.Controllers
                     var user = await _userManager.FindByEmailAsync(model.Email);
                     if (user != null)
                     {
-                        // Redirect based on account type
                         switch (user.AccountType)
                         {
                             case AccountType.Learner:
@@ -55,12 +56,14 @@ namespace WebApplication1.Controllers
             return View(model);
         }
 
+
+
         public IActionResult Registeration()
         {
             return View();
         }
 
-        
+
         [HttpPost]
         public async Task<IActionResult> Registeration(Registeraionmodel model)
         {
@@ -74,7 +77,6 @@ namespace WebApplication1.Controllers
                     ExperienceLevel = model.ExperienceLevel,
                     AccountType = model.AccountType
                 };
-
                 // Create the user in the database and hash the password automatically
                 var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -94,4 +96,4 @@ namespace WebApplication1.Controllers
             return View(model);
         }
     }
-    }
+}
