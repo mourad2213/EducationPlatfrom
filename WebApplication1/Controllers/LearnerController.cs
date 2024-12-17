@@ -23,22 +23,29 @@ public class LearnerController : Controller
             return NotFound("User not found");
         }
 
+        // Get the learner associated with the user
         var learner = await _context.Learners
-            .Include(l => l.CourseEnrollments) // Include the enrolled courses
             .FirstOrDefaultAsync(l => l.UserId == user.Id);
 
-        if (learner != null)
+        if (learner == null)
         {
-            var model = new LearnerProfileViewModel
-            {
-                Fullname = learner.LearnerName,
-                EnrolledCourses = learner.CourseEnrollments
-            };
-
-            return View(model);
+            return NotFound("No learner found.");
         }
 
-        return NotFound("No learner found.");
+        // Fetch course enrollments for the learner
+        var enrollments = await _context.CourseEnrollments
+            .Include(ce => ce.Course) // Include course details
+            .Where(ce => ce.LearnerId == learner.LearnerId) // Match LearnerId
+            .ToListAsync();
+
+        // Prepare the view model
+        var model = new LearnerProfileViewModel
+        {
+            Fullname = learner.LearnerName,
+            EnrolledCourses = enrollments // Pass the matched enrollments
+        };
+
+        return View(model);
     }
 
     // View all available courses to enroll in
@@ -83,16 +90,31 @@ public class LearnerController : Controller
     // View courses the learner is enrolled in
     public async Task<IActionResult> MyCourses()
     {
+        // Get the currently logged-in user
         var user = await _userManager.GetUserAsync(User);
-        var learner = await _context.Learners
-            .Include(l => l.CourseEnrollments) // Include the enrolled courses
-            .FirstOrDefaultAsync(l => l.UserId == user.Id);
 
-        if (learner != null)
+        if (user == null)
         {
-            return View(learner.CourseEnrollments);
+            return NotFound("User not found");
         }
 
-        return NotFound("No learner found.");
+        // Fetch the learner associated with this user
+        var learner = await _context.Learners
+            .FirstOrDefaultAsync(l => l.UserId == user.Id);
+
+        if (learner == null)
+        {
+            return NotFound("Learner not found");
+        }
+
+        // Fetch the courses the learner is enrolled in from CourseEnrollment
+        var enrolledCourses = await _context.CourseEnrollments
+            .Include(ce => ce.Course) // Include course details
+            .Where(ce => ce.LearnerId == learner.LearnerId) // Filter by Learner ID
+            .Select(ce => ce.Course) // Select the course details
+            .ToListAsync();
+
+        return View(enrolledCourses); // Pass the list of courses to the view
     }
+
 }

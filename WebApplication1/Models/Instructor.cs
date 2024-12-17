@@ -12,7 +12,7 @@ public partial class Instructor
     public string? ExpertiseAreas { get; set; }
 
     public string? Qualifications { get; set; }
-
+    public string UserId { get; set; }
     public virtual ICollection<Assessment> Assessments { get; set; } = new List<Assessment>();
 
     public virtual ICollection<EmotionalFeedback> EmotionalFeedbacks { get; set; } = new List<EmotionalFeedback>();

@@ -3,7 +3,7 @@
 <h2>@Model.Fullname's Profile</h2>
 
 <h3>My Enrolled Courses</h3>
-@if (Model.EnrolledCourses.Any())
+@if (Model.EnrolledCourses != null && Model.EnrolledCourses.Any())
 {
     <ul>
         @foreach (var enrollment in Model.EnrolledCourses)
