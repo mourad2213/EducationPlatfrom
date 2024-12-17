@@ -116,6 +116,7 @@ namespace WebApplication1.Controllers
                                 // Set other Learner-specific properties here
                             };
                             _context.Learners.Add(learner);
+                            await _userManager.AddToRoleAsync(user, "Learner");
                             break;
 
                         case AccountType.Instructor:
@@ -126,6 +127,7 @@ namespace WebApplication1.Controllers
                                 // Set other Instructor-specific properties here
                             };
                             _context.Instructors.Add(instructor);
+                            await _userManager.AddToRoleAsync(user, "Instructor");
                             break;
 
                             /*case AccountType.Admin:
