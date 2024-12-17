@@ -63,6 +63,7 @@ namespace WebApplication1.Controllers
             }
             return View(course);
         }
+        
 
         // GET: Courses/Edit/5
         public async Task<IActionResult> Edit(int? id)

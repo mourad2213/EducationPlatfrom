@@ -1,0 +1,73 @@
+﻿@model WebApplication1.Models.LearningActivity
+
+@{
+    ViewData["Title"] = "Create Learning Activity";
+}
+
+<h1>Create Learning Activity</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Activity Type -->
+            <div class="form-group">
+                <label asp-for="ActivityType" class="control-label"></label>
+                <input asp-for="ActivityType" class="form-control" />
+                <span asp-validation-for="ActivityType" class="text-danger"></span>
+            </div>
+
+            <!-- Detailed Instructions -->
+            <div class="form-group">
+                <label asp-for="DetailedInstructions" class="control-label"></label>
+                <textarea asp-for="DetailedInstructions" class="form-control"></textarea>
+                <span asp-validation-for="DetailedInstructions" class="text-danger"></span>
+            </div>
+
+            <!-- Max Points -->
+            <div class="form-group">
+                <label asp-for="MaxPoints" class="control-label"></label>
+                <input asp-for="MaxPoints" class="form-control" />
+                <span asp-validation-for="MaxPoints" class="text-danger"></span>
+            </div>
+
+            <!-- Module Selection -->
+            <div class="form-group">
+                <label asp-for="ModuleId" class="control-label"></label>
+                <select asp-for="ModuleId" class="form-control" asp-items="ViewBag.ModuleId"></select>
+                <span asp-validation-for="ModuleId" class="text-danger"></span>
+            </div>
+
+            <!-- Log Selection (if applicable) -->
+            <div class="form-group">
+                <label asp-for="LogId" class="control-label"></label>
+                <select asp-for="LogId" class="form-control" asp-items="ViewBag.LogId"></select>
+                <span asp-validation-for="LogId" class="text-danger"></span>
+            </div>
+
+            <!-- Course Selection -->
+            <div class="form-group">
+                <label asp-for="CourseId" class="control-label"></label>
+                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId"></select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
