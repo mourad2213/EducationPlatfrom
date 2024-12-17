@@ -33,8 +33,10 @@ namespace WebApplication1.Models
         [Required(ErrorMessage = "Birthday is required")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
-        [Required(ErrorMessage = "Phoneenumber is required")]
+        [Required(ErrorMessage = "Phonee number is required")]
         public int PhoneNumber { get; set; }
+
+        public int PhoneNumber2 { get; set; }
         [Required(ErrorMessage = "Gender is required")]
         public string Gender { get; set; }
 

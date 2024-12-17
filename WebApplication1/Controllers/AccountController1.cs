@@ -45,11 +45,11 @@ namespace WebApplication1.Controllers
                         switch (user.AccountType)
                         {
                             case AccountType.Learner:
-                                return RedirectToAction("Index", "Learner");
+                                return RedirectToAction("Index", "Learners");
                             case AccountType.Admin:
                                 return RedirectToAction("Index", "Admin");
                             case AccountType.Instructor:
-                                return RedirectToAction("Index", "Instructor");
+                                return RedirectToAction("Index", "Instructors");
                             default:
                                 return RedirectToAction("Index", "Home");
                         }
@@ -94,6 +94,8 @@ namespace WebApplication1.Controllers
                     Fullname = model.Fullname,
                     ExperienceLevel = model.ExperienceLevel,
                     AccountType = model.AccountType,
+                    PhoneNumber = model.PhoneNumber,
+                    Birthday = model.Birthday,
                     EmailConfirmed = true
                 };
                 // Create the user in the database and hash the password automatically
