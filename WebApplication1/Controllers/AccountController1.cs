@@ -31,12 +31,15 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
+                    Console.WriteLine("Login successful for user: " + model.Email);
+
                     var user = await _userManager.FindByEmailAsync(model.Email);
                     if (user != null)
                     {
-                        // Redirect based on account type
+                        Console.WriteLine($"User's account type: {user.AccountType}");
                         switch (user.AccountType)
                         {
                             case AccountType.Learner:
@@ -50,10 +53,26 @@ namespace WebApplication1.Controllers
                         }
                     }
                 }
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                else
+                {
+                    Console.WriteLine($"Login failed: {result.ToString()}");
+                    if (result.IsNotAllowed)
+                        ModelState.AddModelError(string.Empty, "Account is not allowed to login (e.g., email not confirmed).");
+                    else if (result.IsLockedOut)
+                        ModelState.AddModelError(string.Empty, "Account is locked out.");
+                    else
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                }
             }
+            else
+            {
+                Console.WriteLine("ModelState is invalid.");
+            }
+
             return View(model);
         }
+
+
 
         public IActionResult Registeration()
         {
@@ -72,7 +91,8 @@ namespace WebApplication1.Controllers
                     UserName = model.Email, // Assuming username is the same as email
                     Fullname = model.Fullname,
                     ExperienceLevel = model.ExperienceLevel,
-                    AccountType = model.AccountType
+                    AccountType = model.AccountType,
+                    EmailConfirmed = true
                 };
 
                 // Create the user in the database and hash the password automatically

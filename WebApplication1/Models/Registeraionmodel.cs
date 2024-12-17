@@ -5,16 +5,16 @@ namespace WebApplication1.Models
 {
     public enum ExperienceLevel
     {
-        Beginner,
-        Intermediate,
-        Advanced
+        Beginner = 1,
+        Intermediate = 2,
+        Advanced = 3,
     }
 
     public enum AccountType
     {
-        Learner,
-        Admin,
-        Instructor
+        Learner = 1,
+        Admin = 2,
+        Instructor = 3,
     }
 
     public class Registeraionmodel
