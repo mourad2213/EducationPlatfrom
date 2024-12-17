@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Controllers;
 //using WebApplication1.login;
 namespace WebApplication1.Models;
-
 public partial class MilestoneContext : IdentityDbContext<UserAcccount>
 {
     public MilestoneContext()
     {
     }
-
     public MilestoneContext(DbContextOptions<MilestoneContext> options)
         : base(options)
     {
@@ -95,11 +94,19 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
     public IEnumerable<object> UserAcccount { get; internal set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=Milestone;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        // Identity entities configuration
+        modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(x => new { x.LoginProvider, x.ProviderKey });
+        modelBuilder.Entity<IdentityUserRole<string>>().HasKey(x => new { x.UserId, x.RoleId });
+        modelBuilder.Entity<IdentityUserToken<string>>().HasKey(x => new { x.UserId, x.LoginProvider, x.Name });
+
+        // Achievement entity configuration
         modelBuilder.Entity<Achievement>(entity =>
         {
             entity.HasKey(e => e.AchievementId).HasName("PK__Achievem__2A420CCBE5ED821F");
@@ -133,6 +140,10 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
                         j.IndexerProperty<int>("BadgeId").HasColumnName("Badge_ID");
                     });
         });
+
+        // Additional configurations if any
+
+
 
         modelBuilder.Entity<Assessment>(entity =>
         {

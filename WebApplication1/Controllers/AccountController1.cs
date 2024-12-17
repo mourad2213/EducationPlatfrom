@@ -60,6 +60,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        
         [HttpPost]
         public async Task<IActionResult> Registeration(Registeraionmodel model)
         {
@@ -74,18 +75,23 @@ namespace WebApplication1.Controllers
                     AccountType = model.AccountType
                 };
 
-                // Hash the password before saving the user
-                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.Password);
+                // Create the user in the database and hash the password automatically
+                var result = await _userManager.CreateAsync(user, model.Password);
 
-                // Add the user to the context and save changes
-                _context.UserAcccounts.Add(user);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Login", "AccountController1");
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login", "AccountController1");
+                }
+                else
+                {
+                    // Add errors to ModelState if the registration failed
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
             return View(model);
         }
-
-
     }
-}
+    }

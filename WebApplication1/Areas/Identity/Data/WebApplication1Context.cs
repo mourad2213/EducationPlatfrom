@@ -8,7 +8,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Areas.Identity.Data;
 
-public class WebApplication1Context : IdentityDbContext<IdentityUser>
+public class WebApplication1Context : IdentityDbContext<UserAcccount>
 {
     public WebApplication1Context(DbContextOptions<WebApplication1Context> options)
         : base(options)
