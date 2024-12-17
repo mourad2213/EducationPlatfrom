@@ -6,7 +6,7 @@
     {
             <li>
             @course.CourseTitle
-                <a href="@Url.Action("EnrollInCourse", "LearnerController", new { courseId = course.CourseId })">Enroll</a>
+                <a href="@Url.Action("EnrollInCourse", "Learner", new { courseId = course.CourseId })">Enroll</a>
             </li>
     }
 </ul>
