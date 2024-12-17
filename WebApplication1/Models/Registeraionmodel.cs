@@ -12,9 +12,9 @@ namespace WebApplication1.Models
 
     public enum AccountType
     {
-        Learner = 1,
-        Admin = 2,
-        Instructor = 3,
+        Learner,
+        Admin,
+        Instructor
     }
 
     public class Registeraionmodel
@@ -33,7 +33,8 @@ namespace WebApplication1.Models
         [Required(ErrorMessage = "Birthday is required")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
-
+        [Required(ErrorMessage = "Phoneenumber is required")]
+        public int PhoneNumber { get; set; }
         [Required(ErrorMessage = "Gender is required")]
         public string Gender { get; set; }
 

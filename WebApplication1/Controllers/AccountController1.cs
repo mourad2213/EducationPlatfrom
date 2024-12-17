@@ -26,6 +26,8 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Login(Loginviewmodel model)
         {
             if (ModelState.IsValid)
@@ -79,7 +81,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        
+
         [HttpPost]
         public async Task<IActionResult> Registeration(Registeraionmodel model)
         {
@@ -94,7 +96,6 @@ namespace WebApplication1.Controllers
                     AccountType = model.AccountType,
                     EmailConfirmed = true
                 };
-
                 // Create the user in the database and hash the password automatically
                 var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -114,4 +115,4 @@ namespace WebApplication1.Controllers
             return View(model);
         }
     }
-    }
+}
