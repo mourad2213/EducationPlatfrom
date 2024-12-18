@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +14,12 @@ namespace WebApplication1.Controllers
     public class ModulesController : Controller
     {
         private readonly MilestoneContext _context;
+        private readonly UserManager<UserAcccount> _userManager;
 
-        public ModulesController(MilestoneContext context)
+        public ModulesController(MilestoneContext context, UserManager<UserAcccount> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Modules
@@ -88,18 +92,38 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            ViewData["Course_ID"] = new SelectList(_context.Courses, "Course_ID", "Course_Title", module.CourseId);
+            // Ensure the current user is an instructor (no course relation check)
+            var user = await _userManager.GetUserAsync(User);
+            var isInstructor = await _context.Instructors
+                .AnyAsync(i => i.UserId == user.Id);
+
+            if (!isInstructor)
+            {
+                return Unauthorized(); // Only instructors can edit
+            }
+
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseTitle", module.CourseId);
             return View(module);
         }
 
         // POST: Modules/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Module_ID,Module_Title,Course_ID")] Module module)
+        public async Task<IActionResult> Edit(int id, [Bind("ModuleId,ModuleTitle,CourseId")] Module module)
         {
             if (id != module.ModuleId)
             {
                 return NotFound();
+            }
+
+            // Ensure the current user is an instructor (no course relation check)
+            var user = await _userManager.GetUserAsync(User);
+            var isInstructor = await _context.Instructors
+                .AnyAsync(i => i.UserId == user.Id);
+
+            if (!isInstructor)
+            {
+                return Unauthorized(); // Only instructors can edit
             }
 
             if (ModelState.IsValid)
@@ -123,9 +147,51 @@ namespace WebApplication1.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["Course_ID"] = new SelectList(_context.Courses, "Course_ID", "Course_Title", module.CourseId);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseTitle", module.CourseId);
             return View(module);
         }
+
+        // GET: Modules/AddActivity/5
+        public IActionResult AddActivity(int moduleId)
+        {
+            // Ensure the current user is an instructor for this module's course
+            var user = _userManager.GetUserAsync(User).Result;
+            var isInstructor = _context.Instructors
+                .Any(i => i.UserId == user.Id);
+
+            if (!isInstructor)
+            {
+                return Unauthorized(); // Only instructors can add activities
+            }
+
+            ViewBag.ModuleId = moduleId;  // Pass moduleId to the view
+            return View();  // It will automatically look in Views/Modules/LearningActivities
+        }
+
+        // POST: Modules/AddActivity/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddActivity(int moduleId, [Bind("ActivityType,DetailedInstructions,MaxPoints")] LearningActivity activity)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var isInstructor = await _context.Instructors
+                .AnyAsync(i => i.UserId == user.Id);
+
+            if (!isInstructor)
+            {
+                return Unauthorized(); // Only instructors can add activities
+            }
+
+            if (ModelState.IsValid)
+            {
+                activity.ModuleId = moduleId; // Associate the activity with the module
+                _context.Add(activity);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", new { id = moduleId }); // Redirect to module details page
+            }
+            return View();  // It will automatically look in Views/Modules/LearningActivities
+        }
+
 
         // GET: Modules/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -160,6 +226,7 @@ namespace WebApplication1.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+       
 
         private bool ModuleExists(int id)
         {

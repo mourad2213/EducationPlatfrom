@@ -110,9 +110,9 @@ namespace WebApplication1.Controllers
                                 LearnerName = model.Fullname,
                                 LearnerGender = model.Gender,
                                 CountryOfOrigin = model.CountryOfOrigin,
-
+                                UserId = user.Id
                                 //birthdate
-                                // Set other Learner-specific properties here
+                                
                             };
                             _context.Learners.Add(learner);
                             break;
@@ -121,8 +121,10 @@ namespace WebApplication1.Controllers
                             var instructor = new Instructor
                             {
                                 InstructorName = model.Fullname,
+                                UserId = user.Id,
+                                
                                 //accountemail
-                                // Set other Instructor-specific properties here
+                                
                             };
                             _context.Instructors.Add(instructor);
                             break;

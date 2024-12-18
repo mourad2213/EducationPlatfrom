@@ -1,0 +1,45 @@
+﻿@model WebApplication1.Models.LearningActivity
+
+@{
+    ViewData["Title"] = "Add Learning Activity";
+}
+
+<h1>Add Learning Activity</h1>
+
+<form asp-action="AddActivity" method="post">
+    <div class="form-group">
+        <label asp-for="ActivityType" class="control-label"></label>
+        <select asp-for="ActivityType" class="form-control">
+            <option value="Quiz">Quiz</option>
+            <option value="Assignment">Assignment</option>
+            <option value="Project">Project</option>
+            <option value="Discussion">Discussion</option>
+        </select>
+        <span asp-validation-for="ActivityType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DetailedInstructions" class="control-label"></label>
+        <textarea asp-for="DetailedInstructions" class="form-control"></textarea>
+        <span asp-validation-for="DetailedInstructions" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MaxPoints" class="control-label"></label>
+        <input asp-for="MaxPoints" type="number" class="form-control" />
+        <span asp-validation-for="MaxPoints" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="ModuleId" value="@ViewBag.ModuleId" />
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add Activity</button>
+    </div>
+</form>
+
+<!-- Validation Script -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

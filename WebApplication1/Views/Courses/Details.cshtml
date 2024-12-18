@@ -1,41 +1,74 @@
 ﻿@model WebApplication1.Models.Course
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Course Details";
 }
 
-<h1>Details</h1>
+<h1>Course Details</h1>
 
 <div>
-    <h4>Course</h4>
+    <h4>Course Information</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CourseTitle)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CourseTitle)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CourseCreditHours)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CourseCreditHours)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CourseDescription)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CourseDescription)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DifficultyLevel)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DifficultyLevel)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CoursePrerequisite)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CoursePrerequisite.Prerequisite)
         </dd>
     </dl>
 </div>
+
+<div>
+    <h4>Modules in this Course</h4>
+    <hr />
+    @if (Model.Modules != null && Model.Modules.Any())
+    {
+        <ul>
+            @foreach (var module in Model.Modules)
+            {
+                <li>
+                    <strong>Module (ID: @module.ModuleId)</strong><br />
+                    <span><strong>Level of Difficulty:</strong> @module.LevelOfDifficulty</span><br />
+                    <span><strong>Content Type:</strong> @module.ContentType</span><br />
+                    <a asp-action="Details" asp-controller="Modules" asp-route-id="@module.ModuleId">View Module Details</a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No modules available for this course.</p>
+    }
+</div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.CourseId">Edit</a> |
     <a asp-action="Index">Back to List</a>
