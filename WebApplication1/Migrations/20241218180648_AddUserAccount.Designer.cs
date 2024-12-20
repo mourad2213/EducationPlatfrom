@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Models;
 
@@ -11,34 +12,18 @@ using WebApplication1.Models;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(MilestoneContext))]
-    partial class MilestoneContextModelSnapshot : ModelSnapshot
+    [Migration("20241218180648_AddUserAccount")]
+    partial class AddUserAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AchievementBadge", b =>
-                {
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int")
-                        .HasColumnName("Achievement_ID");
-
-                    b.Property<int>("BadgeId")
-                        .HasColumnType("int")
-                        .HasColumnName("Badge_ID");
-
-                    b.HasKey("AchievementId", "BadgeId")
-                        .HasName("PK__Achievem__797062FB352A10FE");
-
-                    b.HasIndex("BadgeId");
-
-                    b.ToTable("AchievementBadges", (string)null);
-                });
 
             modelBuilder.Entity("CoursesInstructor", b =>
                 {
@@ -56,44 +41,6 @@ namespace WebApplication1.Migrations
                     b.HasIndex("InstructorId");
 
                     b.ToTable("CoursesInstructor", (string)null);
-                });
-
-            modelBuilder.Entity("InstructorEmail", b =>
-                {
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("int")
-                        .HasColumnName("Instructor_ID");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("InstructorEmailId")
-                        .HasColumnType("int");
-
-                    b.HasKey("InstructorId", "Email")
-                        .HasName("PK__Instruct__97D68AD9EB79A6D2");
-
-                    b.ToTable("InstructorEmail", (string)null);
-                });
-
-            modelBuilder.Entity("LearnerAchievement", b =>
-                {
-                    b.Property<int>("LearnerId")
-                        .HasColumnType("int")
-                        .HasColumnName("Learner_ID");
-
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int")
-                        .HasColumnName("Achievement_ID");
-
-                    b.HasKey("LearnerId", "AchievementId")
-                        .HasName("PK__LearnerA__9F46573372849998");
-
-                    b.HasIndex("AchievementId");
-
-                    b.ToTable("LearnerAchievements", (string)null);
                 });
 
             modelBuilder.Entity("LearnerBadge", b =>
@@ -230,12 +177,10 @@ namespace WebApplication1.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -272,12 +217,10 @@ namespace WebApplication1.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -321,33 +264,6 @@ namespace WebApplication1.Migrations
                     b.HasIndex("PersonalizationProfileId");
 
                     b.ToTable("PersonalizationProfilesLearningPaths", (string)null);
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.Achievement", b =>
-                {
-                    b.Property<int>("AchievementId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Achievement_ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AchievementId"));
-
-                    b.Property<string>("AchievementDescription")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Achievement_Description");
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("type");
-
-                    b.HasKey("AchievementId")
-                        .HasName("PK__Achievem__2A420CCBE5ED821F");
-
-                    b.ToTable("Achievements");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Assessment", b =>
@@ -714,20 +630,29 @@ namespace WebApplication1.Migrations
                     b.Property<string>("Qualifications")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Qualifications");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("UserId");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("InstructorId")
                         .HasName("PK__Instruct__DD4B9A8AFFF401BE");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Instructor", (string)null);
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.InstructorEmail", b =>
+                {
+                    b.Property<int>("InstructorId")
+                        .HasColumnType("int")
+                        .HasColumnName("Instructor_ID");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("InstructorId", "Email")
+                        .HasName("PK__Instruct__97D68AD9EB79A6D2");
+
+                    b.ToTable("InstructorEmail", (string)null);
                 });
 
             modelBuilder.Entity("WebApplication1.Models.InteractionLog", b =>
@@ -1047,11 +972,8 @@ namespace WebApplication1.Migrations
             modelBuilder.Entity("WebApplication1.Models.LearningPath", b =>
                 {
                     b.Property<int>("PathId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Path_ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PathId"));
 
                     b.Property<int?>("InstructorId")
                         .HasColumnType("int")
@@ -1086,38 +1008,6 @@ namespace WebApplication1.Migrations
                     b.HasIndex("LearnerId");
 
                     b.ToTable("LearningPath", (string)null);
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.LearningPathProgress", b =>
-                {
-                    b.Property<int>("ProgressId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProgressId"));
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LearnerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PathId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProgressPercentage")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProgressId");
-
-                    b.HasIndex("LearnerId");
-
-                    b.HasIndex("PathId");
-
-                    b.ToTable("LearningPathProgresses");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Module", b =>
@@ -1265,35 +1155,6 @@ namespace WebApplication1.Migrations
                     b.HasIndex("LearnerId");
 
                     b.ToTable("PersonalizationProfiles");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.Post", b =>
-                {
-                    b.Property<int>("PostId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostId"));
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ForumId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LearnerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PostId");
-
-                    b.HasIndex("ForumId");
-
-                    b.HasIndex("LearnerId");
-
-                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Quest", b =>
@@ -1559,21 +1420,6 @@ namespace WebApplication1.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AchievementBadge", b =>
-                {
-                    b.HasOne("WebApplication1.Models.Achievement", null)
-                        .WithMany()
-                        .HasForeignKey("AchievementId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Achieveme__Achie__51300E55");
-
-                    b.HasOne("WebApplication1.Models.Badge", null)
-                        .WithMany()
-                        .HasForeignKey("BadgeId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Achieveme__Badge__5224328E");
-                });
-
             modelBuilder.Entity("CoursesInstructor", b =>
                 {
                     b.HasOne("WebApplication1.Models.Course", null)
@@ -1587,32 +1433,6 @@ namespace WebApplication1.Migrations
                         .HasForeignKey("InstructorId")
                         .IsRequired()
                         .HasConstraintName("FK__CoursesIn__Instr__47A6A41B");
-                });
-
-            modelBuilder.Entity("InstructorEmail", b =>
-                {
-                    b.HasOne("WebApplication1.Models.Instructor", "Instructor")
-                        .WithMany("Emails")
-                        .HasForeignKey("InstructorId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Instructo__Instr__2BFE89A6");
-
-                    b.Navigation("Instructor");
-                });
-
-            modelBuilder.Entity("LearnerAchievement", b =>
-                {
-                    b.HasOne("WebApplication1.Models.Achievement", null)
-                        .WithMany()
-                        .HasForeignKey("AchievementId")
-                        .IsRequired()
-                        .HasConstraintName("FK__LearnerAc__Achie__339FAB6E");
-
-                    b.HasOne("WebApplication1.Models.Learner", null)
-                        .WithMany()
-                        .HasForeignKey("LearnerId")
-                        .IsRequired()
-                        .HasConstraintName("FK__LearnerAc__Learn__32AB8735");
                 });
 
             modelBuilder.Entity("LearnerBadge", b =>
@@ -1878,14 +1698,15 @@ namespace WebApplication1.Migrations
                     b.Navigation("Learner");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.Instructor", b =>
+            modelBuilder.Entity("WebApplication1.Models.InstructorEmail", b =>
                 {
-                    b.HasOne("WebApplication1.Models.UserAcccount", "UserAccount")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .IsRequired();
+                    b.HasOne("WebApplication1.Models.Instructor", "Instructor")
+                        .WithMany("InstructorEmails")
+                        .HasForeignKey("InstructorId")
+                        .IsRequired()
+                        .HasConstraintName("FK__Instructo__Instr__2BFE89A6");
 
-                    b.Navigation("UserAccount");
+                    b.Navigation("Instructor");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.InteractionLog", b =>
@@ -2071,25 +1892,6 @@ namespace WebApplication1.Migrations
                     b.Navigation("Learner");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.LearningPathProgress", b =>
-                {
-                    b.HasOne("WebApplication1.Models.Learner", "Learner")
-                        .WithMany()
-                        .HasForeignKey("LearnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApplication1.Models.LearningPath", "LearningPath")
-                        .WithMany()
-                        .HasForeignKey("PathId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Learner");
-
-                    b.Navigation("LearningPath");
-                });
-
             modelBuilder.Entity("WebApplication1.Models.Module", b =>
                 {
                     b.HasOne("WebApplication1.Models.Course", "Course")
@@ -2138,21 +1940,6 @@ namespace WebApplication1.Migrations
                         .WithMany("PersonalizationProfiles")
                         .HasForeignKey("LearnerId")
                         .HasConstraintName("FK__Personali__Learn__5070F446");
-
-                    b.Navigation("Learner");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.Post", b =>
-                {
-                    b.HasOne("WebApplication1.Models.DiscussionForum", "Forum")
-                        .WithMany("Posts")
-                        .HasForeignKey("ForumId");
-
-                    b.HasOne("WebApplication1.Models.Learner", "Learner")
-                        .WithMany()
-                        .HasForeignKey("LearnerId");
-
-                    b.Navigation("Forum");
 
                     b.Navigation("Learner");
                 });
@@ -2253,17 +2040,15 @@ namespace WebApplication1.Migrations
             modelBuilder.Entity("WebApplication1.Models.DiscussionForum", b =>
                 {
                     b.Navigation("LearnerDiscussionForums");
-
-                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Instructor", b =>
                 {
                     b.Navigation("Assessments");
 
-                    b.Navigation("Emails");
-
                     b.Navigation("EmotionalFeedbacks");
+
+                    b.Navigation("InstructorEmails");
 
                     b.Navigation("LearningPaths");
                 });

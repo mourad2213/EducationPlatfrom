@@ -12,7 +12,7 @@ namespace WebApplication1.Models
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } // Ensure this is properly set during user creation
 
         [Required(ErrorMessage = "Full name is required")]
         public string Fullname { get; set; }

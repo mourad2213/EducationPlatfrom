@@ -1,0 +1,26 @@
+﻿@model InstructorProfileViewModel
+
+<h2>Update Profile</h2>
+
+<form asp-action="UpdateProfile" method="post">
+    <div class="form-group">
+        <label for="Name">Full Name</label>
+        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" />
+    </div>
+    <div class="form-group">
+        <label for="Email">Emails</label>
+        @for (int i = 0; i < Model.Emails.Count; i++)
+        {
+            <input type="email" class="form-control" id="Emails" name="Emails[@i]" value="@Model.Emails[i]" />
+        }
+    </div>
+    <div class="form-group">
+        <label for="ExpertiseAreas">Expertise Areas</label>
+        <input type="text" class="form-control" id="ExpertiseAreas" name="ExpertiseAreas" value="@Model.ExpertiseAreas" />
+    </div>
+    <div class="form-group">
+        <label for="Qualifications">Qualifications</label>
+        <input type="text" class="form-control" id="Qualifications" name="Qualifications" value="@Model.Qualifications" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

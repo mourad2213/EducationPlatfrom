@@ -1,0 +1,14 @@
+﻿@model LearningPathProgressViewModel
+
+<h2>Learning Path Progress</h2>
+
+<p><strong>Description:</strong> @Model.PathDescription</p>
+<p><strong>Status:</strong> @Model.LearnerStatus</p>
+<p><strong>Start Date:</strong> @Model.StartDate.ToString("yyyy-MM-dd")</p>
+<p><strong>End Date:</strong> @Model.EndDate.ToString("yyyy-MM-dd")</p>
+<p><strong>Progress:</strong> @Model.ProgressPercentage %</p>
+
+<!-- Add a progress bar for visual representation -->
+<div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: @Model.ProgressPercentage%;" aria-valuenow="@Model.ProgressPercentage" aria-valuemin="0" aria-valuemax="100">@Model.ProgressPercentage %</div>
+</div>

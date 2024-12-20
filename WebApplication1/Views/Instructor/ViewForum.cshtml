@@ -1,0 +1,23 @@
+﻿@model WebApplication1.Models.DiscussionForum
+
+<h2>@Model.Title</h2>
+<p>@Model.Description</p>
+
+<h3>Posts</h3>
+@if (Model.Posts != null && Model.Posts.Any())
+{
+    <ul>
+        @foreach (var post in Model.Posts)
+        {
+            <li>
+                <strong>@post.CreatedAt?.ToString("yyyy-MM-dd")</strong>: @post.Content
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No posts yet.</p>
+}
+
+<a asp-controller="Instructor" asp-action="AddPost" asp-route-forumId="@Model.ForumId" class="btn btn-primary">Add Post</a>

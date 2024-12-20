@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -28,6 +29,8 @@ namespace WebApplication1.Controllers
         [HttpPost]
         [HttpPost]
         [HttpPost]
+        [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Login(Loginviewmodel model)
         {
             if (ModelState.IsValid)
@@ -38,26 +41,35 @@ namespace WebApplication1.Controllers
                 {
                     Console.WriteLine("Login successful for user: " + model.Email);
 
-                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+
                     if (user != null)
                     {
                         Console.WriteLine($"User's account type: {user.AccountType}");
                         switch (user.AccountType)
                         {
                             case AccountType.Learner:
+                                Console.WriteLine("Redirecting to LearnerProfile");
                                 return RedirectToAction("LearnerProfile", "Learner");
                             case AccountType.Admin:
+                                Console.WriteLine("Redirecting to Admin Index");
                                 return RedirectToAction("Index", "Admin");
                             case AccountType.Instructor:
-                                return RedirectToAction("Index", "Instructors");
+                                Console.WriteLine("Redirecting to Instructors Index");
+                                return RedirectToAction("InstructorDashboard", "Instructor");
                             default:
+                                Console.WriteLine("Redirecting to Home Index");
                                 return RedirectToAction("Index", "Home");
                         }
+                    }
+                    else
+                    {
+                        Console.WriteLine("User not found.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"Login failed: {result.ToString()}");
+                    Console.WriteLine($"Login failed: {result}");
                     if (result.IsNotAllowed)
                         ModelState.AddModelError(string.Empty, "Account is not allowed to login (e.g., email not confirmed).");
                     else if (result.IsLockedOut)
@@ -75,87 +87,152 @@ namespace WebApplication1.Controllers
         }
 
 
-
         public IActionResult Registeration()
         {
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Registeration(Registeraionmodel model)
         {
+            // Conditional validation for Instructor account type
+            if (model.AccountType == AccountType.Instructor)
+            {
+                if (string.IsNullOrEmpty(model.ExpertiseAreas))
+                {
+                    ModelState.AddModelError("ExpertiseAreas", "Expertise areas are required for instructors");
+                }
+                if (string.IsNullOrEmpty(model.Qualifications))
+                {
+                    ModelState.AddModelError("Qualifications", "Qualifications are required for instructors");
+                }
+            }
+            else
+            {
+                // Remove model state errors for fields that shouldn't be validated
+                ModelState.Remove(nameof(model.ExpertiseAreas));
+                ModelState.Remove(nameof(model.Qualifications));
+                ModelState.Remove(nameof(model.AdditionalEmails));
+            }
+
             if (ModelState.IsValid)
             {
-                var user = new UserAcccount
+                try
                 {
-                    Email = model.Email,
-                    UserName = model.Email, // Assuming username is the same as email
-                    Fullname = model.Fullname,
-                    ExperienceLevel = model.ExperienceLevel,
-                    AccountType = model.AccountType,
-                    EmailConfirmed = true
-                };
-                // Create the user in the database and hash the password automatically
-                var result = await _userManager.CreateAsync(user, model.Password);
+                    Console.WriteLine("Model is valid");
 
-                if (result.Succeeded)
-                {
-                    // Create corresponding Learner, Instructor, or Admin entry based on AccountType
-                    switch (model.AccountType)
+                    var user = new UserAcccount
                     {
-                        case AccountType.Learner:
-                            var learner = new Learner
-                            {
-                                LearnerName = model.Fullname,
-                                LearnerGender = model.Gender,
-                                CountryOfOrigin = model.CountryOfOrigin,
-                                UserId = user.Id
-                                //birthdate
-                                
-                            };
-                            _context.Learners.Add(learner);
-                            break;
+                        Email = model.Email,
+                        UserName = model.Email,
+                        Fullname = model.Fullname,
+                        ExperienceLevel = model.ExperienceLevel,
+                        AccountType = model.AccountType,
+                        CountryOfOrigin = model.CountryOfOrigin,
+                        Gender = model.Gender,
+                        Birthday = model.Birthday,
+                        PhoneNumber = model.PhoneNumber,
+                        PhoneNumber2 = model.PhoneNumber2,
+                        NormalizedEmail = model.Email.ToUpper(),
+                        EmailConfirmed = true,
+                        Password = model.Password,
+                    };
 
-                        case AccountType.Instructor:
-                            var instructor = new Instructor
-                            {
-                                InstructorName = model.Fullname,
-                                UserId = user.Id,
-                                
-                                //accountemail
-                                
-                            };
-                            _context.Instructors.Add(instructor);
-                            break;
+                    // Create the user in the database and hash the password automatically
+                    Console.WriteLine("Creating user...");
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        Console.WriteLine("User created successfully");
 
-                            /*case AccountType.Admin:
+                        // Create corresponding Learner, Instructor, or Admin entry based on AccountType
+                        switch (model.AccountType)
+                        {
+                            case AccountType.Learner:
+                                Console.WriteLine("Creating learner...");
+                                var learner = new Learner
+                                {
+                                    LearnerName = model.Fullname,
+                                    LearnerGender = model.Gender,
+                                    LearnerAge = DateTime.Now.Year - model.Birthday.Year,
+                                    CountryOfOrigin = model.CountryOfOrigin,
+                                    UserId = user.Id
+                                };
+                                _context.Learners.Add(learner);
+                                break;
+
+                            case AccountType.Instructor:
+                                Console.WriteLine("Creating instructor...");
+                                var instructor = new Instructor
+                                {
+                                    InstructorName = model.Fullname,
+                                    UserId = user.Id,
+                                    ExpertiseAreas = model.ExpertiseAreas,
+                                    Qualifications = model.Qualifications
+                                };
+                                _context.Instructors.Add(instructor);
+
+                                // Save the instructor to get the InstructorId
+                                await _context.SaveChangesAsync();
+
+                                // Add primary email address for the instructor
+
+
+                                break;
+
+                            case AccountType.Admin:
+                                Console.WriteLine("Creating admin...");
                                 var admin = new Admin
                                 {
-                                    UserId = user.Id
                                     // Set other Admin-specific properties here
                                 };
-                                _context.Admins.Add(admin);
-                                break;*/
+                                //_context.Admins.Add(admin);
+                                break;
+                        }
+
+                        // Save the changes to the database
+                        Console.WriteLine("Saving changes to the database...");
+                        await _context.SaveChangesAsync();
+
+                        // Redirect to login page
+                        Console.WriteLine("Redirecting to login page...");
+                        return RedirectToAction("Login", "AccountController1");
                     }
-
-                    // Save the changes to the database
-                    await _context.SaveChangesAsync();
-
-                    // Redirect to login page
-                    return RedirectToAction("Login", "AccountController1");
-                }
-                else
-                {
-                    // Add errors to ModelState if the registration failed
-                    foreach (var error in result.Errors)
+                    else
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        Console.WriteLine("User creation failed");
+                        // Add errors to ModelState if the registration failed
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                            Console.WriteLine($"Error: {error.Description}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception (consider using a logging framework such as Serilog)
+                    ModelState.AddModelError(string.Empty, $"An error occurred while processing your request: {ex.Message}");
+                    Console.WriteLine($"Exception: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Model is not valid");
+                // Log validation errors for debugging (consider using a logging framework)
+                foreach (var value in ModelState.Values)
+                {
+                    foreach (var error in value.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.ErrorMessage);
+                        Console.WriteLine($"Validation Error: {error.ErrorMessage}");
                     }
                 }
             }
             return View(model);
         }
+
+
         // Action to display account details
         public async Task<IActionResult> Account()
         {
@@ -173,7 +250,7 @@ namespace WebApplication1.Controllers
                 Fullname = user.Fullname,
                 Email = user.Email,
                 AccountType = user.AccountType,
-                
+
             };
 
             return View(model);
@@ -193,7 +270,7 @@ namespace WebApplication1.Controllers
 
                 // Update user details
                 user.Fullname = model.Fullname;
-                
+
 
                 // Save the updated user information to the database
                 var result = await _userManager.UpdateAsync(user);

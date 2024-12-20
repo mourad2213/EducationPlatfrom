@@ -15,13 +15,13 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
         : base(options)
     {
     }
-
+    public DbSet<LearningPathProgress> LearningPathProgresses { get; set; }
     public DbSet<UserAcccount> UserAcccounts { get; set; }
 
     public virtual DbSet<Achievement> Achievements { get; set; }
 
     public virtual DbSet<Assessment> Assessments { get; set; }
-
+    public DbSet<LearnerDiscussionForum> LearnerDiscussionForums { get; set; }
     public virtual DbSet<Badge> Badges { get; set; }
 
     public virtual DbSet<CollaborativeQuest> CollaborativeQuests { get; set; }
@@ -54,7 +54,6 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
 
     public virtual DbSet<LearnerAssessment> LearnerAssessments { get; set; }
 
-    public virtual DbSet<LearnerDiscussionForum> LearnerDiscussionForums { get; set; }
 
     public virtual DbSet<LearnerNotification> LearnerNotifications { get; set; }
 
@@ -67,7 +66,7 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
     public virtual DbSet<LearningGoal> LearningGoals { get; set; }
 
     public virtual DbSet<LearningPath> LearningPaths { get; set; }
-
+    public DbSet<Post> Posts { get; set; }
     public virtual DbSet<Module> Modules { get; set; }
 
     public virtual DbSet<ModulesLink> ModulesLinks { get; set; }
@@ -141,42 +140,44 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
                     });
         });
 
+
+
         // Additional configurations if any
 
 
 
         modelBuilder.Entity<Assessment>(entity =>
-        {
-            entity.HasKey(e => e.AssessmentId).HasName("PK__Assessme__6B3C1D928095953C");
+            {
+                entity.HasKey(e => e.AssessmentId).HasName("PK__Assessme__6B3C1D928095953C");
 
-            entity.Property(e => e.AssessmentId).HasColumnName("Assessment_ID");
-            entity.Property(e => e.CourseId).HasColumnName("Course_ID");
-            entity.Property(e => e.Description)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.GradingCriteria)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("Grading_Criteria");
-            entity.Property(e => e.InstructorId).HasColumnName("Instructor_ID");
-            entity.Property(e => e.MaxScore).HasColumnName("Max_Score");
-            entity.Property(e => e.ModuleId).HasColumnName("Module_ID");
-            entity.Property(e => e.Title)
-                .HasMaxLength(255)
-                .IsUnicode(false);
+                entity.Property(e => e.AssessmentId).HasColumnName("Assessment_ID");
+                entity.Property(e => e.CourseId).HasColumnName("Course_ID");
+                entity.Property(e => e.Description)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+                entity.Property(e => e.GradingCriteria)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("Grading_Criteria");
+                entity.Property(e => e.InstructorId).HasColumnName("Instructor_ID");
+                entity.Property(e => e.MaxScore).HasColumnName("Max_Score");
+                entity.Property(e => e.ModuleId).HasColumnName("Module_ID");
+                entity.Property(e => e.Title)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-            entity.HasOne(d => d.Course).WithMany(p => p.Assessments)
-                .HasForeignKey(d => d.CourseId)
-                .HasConstraintName("FK__Assessmen__Cours__2645B050");
+                entity.HasOne(d => d.Course).WithMany(p => p.Assessments)
+                    .HasForeignKey(d => d.CourseId)
+                    .HasConstraintName("FK__Assessmen__Cours__2645B050");
 
-            entity.HasOne(d => d.Instructor).WithMany(p => p.Assessments)
-                .HasForeignKey(d => d.InstructorId)
-                .HasConstraintName("FK__Assessmen__Instr__2739D489");
+                entity.HasOne(d => d.Instructor).WithMany(p => p.Assessments)
+                    .HasForeignKey(d => d.InstructorId)
+                    .HasConstraintName("FK__Assessmen__Instr__2739D489");
 
-            entity.HasOne(d => d.Module).WithMany(p => p.Assessments)
-                .HasForeignKey(d => d.ModuleId)
-                .HasConstraintName("FK__Assessmen__Modul__282DF8C2");
-        });
+                entity.HasOne(d => d.Module).WithMany(p => p.Assessments)
+                    .HasForeignKey(d => d.ModuleId)
+                    .HasConstraintName("FK__Assessmen__Modul__282DF8C2");
+            });
 
         modelBuilder.Entity<Badge>(entity =>
         {
@@ -250,63 +251,112 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
                 .HasConstraintName("FK__ContentLi__Modul__778AC167");
         });
 
-        modelBuilder.Entity<Course>(entity =>
+        modelBuilder.Entity<LearningPathProgress>(entity =>
         {
-            entity.HasKey(e => e.CourseId).HasName("PK__Courses__37E005FB8902CD41");
+            entity.HasKey(e => e.ProgressId); // Define the primary key
 
-            entity.Property(e => e.CourseId).HasColumnName("Course_ID");
-            entity.Property(e => e.CourseCreditHours).HasColumnName("Course_Credit_Hours");
-            entity.Property(e => e.CourseDescription)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("Course_Description");
-            entity.Property(e => e.CourseTitle)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("Course_Title");
-            entity.Property(e => e.DifficultyLevel)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("Difficulty_Level");
+            entity.HasOne(lp => lp.LearningPath)
+                .WithMany()
+                .HasForeignKey(lp => lp.PathId);
 
-            entity.HasMany(d => d.Instructors).WithMany(p => p.Courses)
-                .UsingEntity<Dictionary<string, object>>(
-                    "CoursesInstructor",
-                    r => r.HasOne<Instructor>().WithMany()
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__CoursesIn__Instr__47A6A41B"),
-                    l => l.HasOne<Course>().WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__CoursesIn__Cours__46B27FE2"),
-                    j =>
-                    {
-                        j.HasKey("CourseId", "InstructorId").HasName("PK__CoursesI__8A34BC5381155A32");
-                        j.ToTable("CoursesInstructor");
-                        j.IndexerProperty<int>("CourseId").HasColumnName("Course_ID");
-                        j.IndexerProperty<int>("InstructorId").HasColumnName("Instructor_ID");
-                    });
-
-            entity.HasMany(d => d.LearnersNavigation).WithMany(p => p.Courses)
-                .UsingEntity<Dictionary<string, object>>(
-                    "LearnerCourse",
-                    r => r.HasOne<Learner>().WithMany()
-                        .HasForeignKey("LearnerId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__LearnerCo__Learn__55F4C372"),
-                    l => l.HasOne<Course>().WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__LearnerCo__Cours__55009F39"),
-                    j =>
-                    {
-                        j.HasKey("CourseId", "LearnerId").HasName("PK__LearnerC__D43E2284F7B269A0");
-                        j.ToTable("LearnerCourses");
-                        j.IndexerProperty<int>("CourseId").HasColumnName("Course_ID");
-                        j.IndexerProperty<int>("LearnerId").HasColumnName("Learner_ID");
-                    });
+            entity.HasOne(lp => lp.Learner)
+                .WithMany()
+                .HasForeignKey(lp => lp.LearnerId);
         });
+
+        // Other entity configurations...
+
+        modelBuilder.Entity<Instructor>(entity =>
+        {
+            entity.HasKey(e => e.InstructorId);
+
+            entity.Property(e => e.InstructorId).HasColumnName("Instructor_ID");
+            entity.Property(e => e.InstructorName).HasColumnName("Instructor_Name").HasMaxLength(255);
+            entity.Property(e => e.ExpertiseAreas).HasColumnName("Expertise_Areas").HasMaxLength(50);
+            entity.Property(e => e.Qualifications).HasColumnName("Qualifications").HasMaxLength(50);
+            entity.Property(e => e.UserId).HasColumnName("UserId"); // Map UserId property
+
+            entity.HasOne(d => d.UserAccount)
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull); // Configure the foreign key relationship
+        });
+
+        modelBuilder.Entity<InstructorEmail>(entity =>
+        {
+            entity.HasKey(e => e.InstructorEmailId);
+
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            entity.HasOne(d => d.Instructor)
+                .WithMany(p => p.Emails)
+                .HasForeignKey(d => d.InstructorId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+
+
+
+
+        modelBuilder.Entity<Course>(entity =>
+                            {
+                                entity.HasKey(e => e.CourseId).HasName("PK__Courses__37E005FB8902CD41");
+
+                                entity.Property(e => e.CourseId).HasColumnName("Course_ID");
+                                entity.Property(e => e.CourseCreditHours).HasColumnName("Course_Credit_Hours");
+                                entity.Property(e => e.CourseDescription)
+                                    .HasMaxLength(100)
+                                    .IsUnicode(false)
+                                    .HasColumnName("Course_Description");
+                                entity.Property(e => e.CourseTitle)
+                                    .HasMaxLength(100)
+                                    .IsUnicode(false)
+                                    .HasColumnName("Course_Title");
+                                entity.Property(e => e.DifficultyLevel)
+                                    .HasMaxLength(50)
+                                    .IsUnicode(false)
+                                    .HasColumnName("Difficulty_Level");
+
+                                entity.HasMany(d => d.Instructors).WithMany(p => p.Courses)
+                                    .UsingEntity<Dictionary<string, object>>(
+                                        "CoursesInstructor",
+                                        r => r.HasOne<Instructor>().WithMany()
+                                            .HasForeignKey("InstructorId")
+                                            .OnDelete(DeleteBehavior.ClientSetNull)
+                                            .HasConstraintName("FK__CoursesIn__Instr__47A6A41B"),
+                                        l => l.HasOne<Course>().WithMany()
+                                            .HasForeignKey("CourseId")
+                                            .OnDelete(DeleteBehavior.ClientSetNull)
+                                            .HasConstraintName("FK__CoursesIn__Cours__46B27FE2"),
+                                        j =>
+                                        {
+                                            j.HasKey("CourseId", "InstructorId").HasName("PK__CoursesI__8A34BC5381155A32");
+                                            j.ToTable("CoursesInstructor");
+                                            j.IndexerProperty<int>("CourseId").HasColumnName("Course_ID");
+                                            j.IndexerProperty<int>("InstructorId").HasColumnName("Instructor_ID");
+                                        });
+
+                                entity.HasMany(d => d.LearnersNavigation).WithMany(p => p.Courses)
+                                    .UsingEntity<Dictionary<string, object>>(
+                                        "LearnerCourse",
+                                        r => r.HasOne<Learner>().WithMany()
+                                            .HasForeignKey("LearnerId")
+                                            .OnDelete(DeleteBehavior.ClientSetNull)
+                                            .HasConstraintName("FK__LearnerCo__Learn__55F4C372"),
+                                        l => l.HasOne<Course>().WithMany()
+                                            .HasForeignKey("CourseId")
+                                            .OnDelete(DeleteBehavior.ClientSetNull)
+                                            .HasConstraintName("FK__LearnerCo__Cours__55009F39"),
+                                        j =>
+                                        {
+                                            j.HasKey("CourseId", "LearnerId").HasName("PK__LearnerC__D43E2284F7B269A0");
+                                            j.ToTable("LearnerCourses");
+                                            j.IndexerProperty<int>("CourseId").HasColumnName("Course_ID");
+                                            j.IndexerProperty<int>("LearnerId").HasColumnName("Learner_ID");
+                                        });
+                            });
 
         modelBuilder.Entity<CourseEnrollment>(entity =>
         {
@@ -464,7 +514,7 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.Instructor).WithMany(p => p.InstructorEmails)
+            entity.HasOne(d => d.Instructor).WithMany(p => p.Emails)
                 .HasForeignKey(d => d.InstructorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Instructo__Instr__2BFE89A6");
@@ -602,6 +652,7 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
                 .HasConstraintName("FK__LearnerAs__Learn__2EDAF651");
         });
 
+
         modelBuilder.Entity<LearnerDiscussionForum>(entity =>
         {
             entity.HasKey(e => new { e.ForumId, e.LearnerId, e.Post }).HasName("PK__LearnerD__A8E701A6D0C1FC84");
@@ -623,23 +674,31 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
                 .HasConstraintName("FK__LearnerDi__Learn__236943A5");
         });
 
+        // Other entity configurations...
+
+
+
+        // Other entity configurations...
+
+
+
         modelBuilder.Entity<LearnerNotification>(entity =>
-        {
-            entity.HasKey(e => new { e.LearnerId, e.NotificationId }).HasName("PK__LearnerN__752361F4410735BE");
+                {
+                    entity.HasKey(e => new { e.LearnerId, e.NotificationId }).HasName("PK__LearnerN__752361F4410735BE");
 
-            entity.Property(e => e.LearnerId).HasColumnName("Learner_ID");
-            entity.Property(e => e.NotificationId).HasColumnName("Notification_ID");
+                    entity.Property(e => e.LearnerId).HasColumnName("Learner_ID");
+                    entity.Property(e => e.NotificationId).HasColumnName("Notification_ID");
 
-            entity.HasOne(d => d.Learner).WithMany(p => p.LearnerNotifications)
-                .HasForeignKey(d => d.LearnerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__LearnerNo__Learn__3B40CD36");
+                    entity.HasOne(d => d.Learner).WithMany(p => p.LearnerNotifications)
+                        .HasForeignKey(d => d.LearnerId)
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK__LearnerNo__Learn__3B40CD36");
 
-            entity.HasOne(d => d.Notification).WithMany(p => p.LearnerNotifications)
-                .HasForeignKey(d => d.NotificationId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__LearnerNo__Notif__3C34F16F");
-        });
+                    entity.HasOne(d => d.Notification).WithMany(p => p.LearnerNotifications)
+                        .HasForeignKey(d => d.NotificationId)
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK__LearnerNo__Notif__3C34F16F");
+                });
 
         modelBuilder.Entity<LearnerQuest>(entity =>
         {
@@ -732,7 +791,7 @@ public partial class MilestoneContext : IdentityDbContext<UserAcccount>
             entity.ToTable("LearningPath");
 
             entity.Property(e => e.PathId)
-                .ValueGeneratedNever()
+                 .ValueGeneratedOnAdd()
                 .HasColumnName("Path_ID");
             entity.Property(e => e.InstructorId).HasColumnName("Instructor_ID");
             entity.Property(e => e.LearnerId).HasColumnName("Learner_ID");

@@ -1,0 +1,40 @@
+﻿@model CompleteProfileViewModel
+
+<h1>@Model.Fullname's Complete Profile</h1>
+
+<p>Email: @Model.Email</p>
+@if (Model.Birthday != DateOnly.MinValue)
+{
+    <p>Birthday: @Model.Birthday.ToString("yyyy-MM-dd")</p>
+}
+@if (!string.IsNullOrEmpty(Model.Gender))
+{
+    <p>Gender: @Model.Gender</p>
+}
+<p>Phone Number: @Model.PhoneNumber</p>
+<p>Alternate Phone Number: @Model.PhoneNumber2</p>
+@if (!string.IsNullOrEmpty(Model.CountryOfOrigin))
+{
+    <p>Country of Origin: @Model.CountryOfOrigin</p>
+}
+
+<h2>Enrolled Courses</h2>
+@if (Model.EnrolledCourses != null && Model.EnrolledCourses.Any())
+{
+    <ul>
+        @foreach (var enrollment in Model.EnrolledCourses)
+        {
+            <li>@enrollment.Course.CourseTitle</li>
+        }
+    </ul>
+}
+else
+{
+    <p>You are not enrolled in any courses.</p>
+}
+
+<!-- Button to update profile -->
+<a asp-controller="Learner" asp-action="UpdateProfile" class="btn btn-primary">Update Profile</a>
+
+<!-- Button to go back to the profile -->
+<a asp-controller="Learner" asp-action="LearnerProfile" class="btn btn-secondary">Back to Profile</a>

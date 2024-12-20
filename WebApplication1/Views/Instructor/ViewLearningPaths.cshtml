@@ -1,0 +1,23 @@
+﻿@model IEnumerable<WebApplication1.Models.LearningPath>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Path ID</th>
+            <th>Rules</th>
+            <th>Learner Status</th>
+            <th>Path Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var path in Model)
+        {
+            <tr>
+                <td>@path.PathId</td>
+                <td>@path.Rules</td>
+                <td>@path.LearnerStatus</td>
+                <td>@path.PathDescription</td>
+            </tr>
+        }
+    </tbody>
+</table>

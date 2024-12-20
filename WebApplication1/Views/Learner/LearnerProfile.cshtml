@@ -17,4 +17,69 @@ else
     <p>You are not enrolled in any courses.</p>
 }
 
-<a href="@Url.Action("ViewCourses", "Learner")">View Available Courses</a>
+<!-- Button to view complete profile -->
+<a asp-controller="Learner" asp-action="CompleteProfile" class="btn btn-primary">View Complete Profile</a>
+
+<h3>Available Courses</h3>
+<a href="@Url.Action("ViewCourses", "Learner")" class="btn btn-secondary">View Available Courses</a>
+
+<h3>My Learning Goals</h3>
+@if (Model.LearningGoals != null && Model.LearningGoals.Any())
+{
+    <ul>
+        @foreach (var goal in Model.LearningGoals)
+        {
+            <li>
+                <strong>@goal.Description</strong><br />
+                <em>Deadline: @goal.Deadline?.ToString("yyyy-MM-dd")</em><br />
+                <em>Status: @goal.Status</em>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have no learning goals.</p>
+}
+
+<!-- Button to add a new learning goal -->
+<a asp-controller="Learner" asp-action="AddLearningGoal" class="btn btn-primary">Add Learning Goal</a>
+
+<h3>My Learning Paths</h3>
+@if (Model.LearningPaths != null && Model.LearningPaths.Any())
+{
+    <ul>
+        @foreach (var path in Model.LearningPaths)
+        {
+            <li>
+                <strong>@path.PathDescription</strong><br />
+                <em>Rules: @path.Rules</em><br />
+                <em>Status: @path.LearnerStatus</em>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have no learning paths.</p>
+}
+
+
+
+<h3>My Discussion Forum Posts</h3>
+@if (Model.DiscussionForumPosts != null && Model.DiscussionForumPosts.Any())
+{
+    <ul>
+        @foreach (var post in Model.DiscussionForumPosts)
+        {
+            <li>@post.Content</li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have not made any posts in the discussion forums.</p>
+}
+
+<!-- Button to view discussion forums -->
+<a asp-controller="DiscussionForum" asp-action="ViewAllForums" class="btn btn-secondary">View Discussion Forums</a>

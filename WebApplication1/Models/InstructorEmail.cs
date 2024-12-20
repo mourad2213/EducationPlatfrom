@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using WebApplication1.Models;
 
-namespace WebApplication1.Models;
-
-public partial class InstructorEmail
+public class InstructorEmail
 {
+    public int InstructorEmailId { get; set; } // Primary key, auto-increment
+    [Required]
+    public string Email { get; set; }
     public int InstructorId { get; set; }
-
-    public string Email { get; set; } = null!;
-
-    public virtual Instructor Instructor { get; set; } = null!;
+    public Instructor Instructor { get; set; }
 }

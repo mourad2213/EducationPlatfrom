@@ -1,0 +1,28 @@
+﻿@model WebApplication1.Models.LearnerDiscussionForumViewModel
+
+<h2>Discussion Forums</h2>
+
+@if (Model.Forums != null && Model.Forums.Any())
+{
+    <ul>
+        @foreach (var forum in Model.Forums)
+        {
+            <li>
+                <h3>@forum.Title</h3>
+                <p>@forum.Description</p>
+                <ul>
+                    @foreach (var post in forum.Posts)
+                    {
+                        <li>
+                            <strong>@post.CreatedAt?.ToString("yyyy-MM-dd")</strong>: @post.Content
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No discussion forums available.</p>
+}

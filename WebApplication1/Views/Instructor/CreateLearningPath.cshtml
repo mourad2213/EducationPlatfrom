@@ -1,0 +1,29 @@
+﻿@model WebApplication1.Models.LearningPathViewModel
+
+<h2>Add New Learning Path</h2>
+
+<form asp-action="CreateLearningPath" method="post">
+    <div class="form-group">
+        <label asp-for="Rules" class="control-label"></label>
+        <input asp-for="Rules" class="form-control" />
+        <span asp-validation-for="Rules" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LearnerStatus" class="control-label"></label>
+        <input asp-for="LearnerStatus" class="form-control" />
+        <span asp-validation-for="LearnerStatus" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PathDescription" class="control-label"></label>
+        <input asp-for="PathDescription" class="form-control" />
+        <span asp-validation-for="PathDescription" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LearnerId" class="control-label"></label>
+        <input asp-for="LearnerId" class="form-control" />
+        <span asp-validation-for="LearnerId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

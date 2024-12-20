@@ -152,5 +152,8 @@ namespace WebApplication1.Controllers
         {
             return _context.Instructors.Any(e => e.InstructorId == id);
         }
+
+
     }
+
 }

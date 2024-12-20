@@ -1,78 +1,123 @@
-﻿@model WebApplication1.Models.Registeraionmodel
+﻿<form asp-action="Registeration" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
+    <div class="form-group">
+        <label for="AccountType">Account Type</label>
+        <select class="form-control" id="AccountType" name="AccountType" onchange="toggleFields()">
+            <option value="1">Learner</option>
+            <option value="3">Instructor</option>
+            <option value="2">Admin</option>
+        </select>
+    </div>
 
-<h2>Register</h2>
-
-<form asp-action="Registeration" method="post">
     <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" required />
     </div>
     <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
+        <label for="Password">Password</label>
+        <input type="password" class="form-control" id="Password" name="Password" required />
     </div>
     <div class="form-group">
-        <label asp-for="Fullname"></label>
-        <input asp-for="Fullname" class="form-control" />
-        <span asp-validation-for="Fullname" class="text-danger"></span>
+        <label for="Fullname">Full Name</label>
+        <input type="text" class="form-control" id="Fullname" name="Fullname" required />
     </div>
     <div class="form-group">
-        <label asp-for="Birthday"></label>
-        <input asp-for="Birthday" type="date" class="form-control" />
-        <span asp-validation-for="Birthday" class="text-danger"></span>
+        <label for="Birthday">Birthday</label>
+        <input type="date" class="form-control" id="Birthday" name="Birthday" required />
     </div>
     <div class="form-group">
-        <label asp-for="Gender"></label>
-        <select asp-for="Gender" class="form-control">
-            <option value="">Select Gender</option>
+        <label for="PhoneNumber">Phone Number</label>
+        <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" required />
+    </div>
+    <div class="form-group">
+        <label for="PhoneNumber2">Additional Phone Number</label>
+        <input type="text" class="form-control" id="PhoneNumber2" name="PhoneNumber2" />
+    </div>
+    <div class="form-group">
+        <label for="Gender">Gender</label>
+        <select class="form-control" id="Gender" name="Gender" required>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
         </select>
-        <span asp-validation-for="Gender" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ExperienceLevel"></label>
-        <select asp-for="ExperienceLevel" class="form-control">
-            <option value="">Select Experience Level</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
+        <label for="ExperienceLevel">Experience Level</label>
+        <select class="form-control" id="ExperienceLevel" name="ExperienceLevel" required>
+            <option value="1">Beginner</option>
+            <option value="2">Intermediate</option>
+            <option value="3">Advanced</option>
         </select>
-        <span asp-validation-for="ExperienceLevel" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CountryOfOrigin"></label>
-        <input asp-for="CountryOfOrigin" class="form-control" />
-        <span asp-validation-for="CountryOfOrigin" class="text-danger"></span>
+        <label for="CountryOfOrigin">Country of Origin</label>
+        <input type="text" class="form-control" id="CountryOfOrigin" name="CountryOfOrigin" required />
     </div>
-    <div class="form-group">
-        <label asp-for="PhoneNumber"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+    <!-- Account Type Selection -->
+    <!-- Learner-specific fields (initially hidden) -->
+    <div id="learnerFields" style="display: none;">
+        <!-- Add learner-specific fields here if needed -->
     </div>
-    <div class="form-group">
-        <label asp-for="AccountType"></label>
-        <select asp-for="AccountType" class="form-control">
-            <option value="">Select Account Type</option>
-            <option value="Learner">Learner</option>
-            <option value="Admin">Admin</option>
-            <option value="Instructor">Instructor</option>
-        </select>
-        <span asp-validation-for="AccountType" class="text-danger"></span>
+
+    <!-- Instructor-specific fields (initially hidden) -->
+    <div id="instructorFields" style="display: none;">
+        <div class="form-group">
+            <label for="ExpertiseAreas">Expertise Areas</label>
+            <input type="text" class="form-control" id="ExpertiseAreas" name="ExpertiseAreas" />
+        </div>
+        <div class="form-group">
+            <label for="Qualifications">Qualifications</label>
+            <input type="text" class="form-control" id="Qualifications" name="Qualifications" />
+        </div>
+        <div class="form-group">
+            <label for="AdditionalEmails">Additional Emails</label>
+            <div id="additionalEmailsContainer">
+                <input type="email" class="form-control" name="AdditionalEmails" />
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addEmailField()">Add Another Email</button>
+        </div>
     </div>
+
+    <!-- Admin-specific fields (initially hidden) -->
+    <div id="adminFields" style="display: none;">
+        <!-- Add admin-specific fields here if needed -->
+    </div>
+
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        <ul>
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <li>@error.ErrorMessage</li>
-            }
-        </ul>
-    </div>
-}
+<script>
+    function toggleFields() {
+        var accountType = document.getElementById("AccountType").value;
+        var learnerFields = document.getElementById("learnerFields");
+        var instructorFields = document.getElementById("instructorFields");
+        var adminFields = document.getElementById("adminFields");
+
+        learnerFields.style.display = "none";
+        instructorFields.style.display = "none";
+        adminFields.style.display = "none";
+
+        if (accountType === "1") { // Learner
+            learnerFields.style.display = "block";
+        } else if (accountType === "3") { // Instructor
+            instructorFields.style.display = "block";
+        } else if (accountType === "2") { // Admin
+            adminFields.style.display = "block";
+        }
+    }
+
+    function addEmailField() {
+        var container = document.getElementById("additionalEmailsContainer");
+        var newEmailField = document.createElement("input");
+        newEmailField.type = "email";
+        newEmailField.name = "AdditionalEmails";
+        newEmailField.className = "form-control";
+        container.appendChild(newEmailField);
+    }
+
+    // Initialize visibility based on the current selection
+    window.onload = function () {
+        toggleFields();
+    };
+</script>
+

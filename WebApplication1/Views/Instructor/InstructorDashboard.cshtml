@@ -1,0 +1,26 @@
+﻿@model InstructorProfileViewModel
+
+<h2>Instructor Dashboard</h2>
+
+<p>Welcome, @Model.Name!</p>
+
+<p>Emails:</p>
+<ul>
+    @foreach (var email in Model.Emails)
+    {
+        <li>@email</li>
+    }
+</ul>
+
+<p>Expertise Areas: @Model.ExpertiseAreas</p>
+<p>Qualifications: @Model.Qualifications</p>
+
+<a asp-controller="Instructor" asp-action="UpdateProfile" class="btn btn-primary">Update Profile</a>
+<a asp-controller="Instructor" asp-action="ViewLearningPaths" class="btn btn-info">View Learning Paths</a>
+<a asp-controller="Instructor" asp-action="CreateLearningPath" class="btn btn-success">Add New Learning Path</a>
+
+<hr />
+
+<h3>Manage Discussion Forums</h3>
+<a asp-controller="Instructor" asp-action="CreateForum" class="btn btn-primary">Create New Forum</a>
+<a asp-controller="Instructor" asp-action="ViewForum" class="btn btn-secondary">View Forums</a>

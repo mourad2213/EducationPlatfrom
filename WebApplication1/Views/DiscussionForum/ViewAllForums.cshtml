@@ -1,0 +1,30 @@
+﻿@model IEnumerable<DiscussionForum>
+
+<h2>Discussion Forums</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Last Active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var forum in Model)
+        {
+            <tr>
+                <td>@forum.Title</td>
+                <td>@forum.Description</td>
+                <td>@forum.LastTimeActive?.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-controller="DiscussionForum" asp-action="ViewForum" asp-route-forumId="@forum.ForumId" class="btn btn-primary">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Back button to go back to the learner's profile -->
+<a asp-controller="Learner" asp-action="LearnerProfile" class="btn btn-secondary">Back to Profile</a>

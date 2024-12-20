@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WebApplication1.Attributes;
 
 namespace WebApplication1.Models
 {
@@ -12,9 +14,9 @@ namespace WebApplication1.Models
 
     public enum AccountType
     {
-        Learner=1,
-        Admin=2,
-        Instructor=3
+        Learner = 1,
+        Admin = 2,
+        Instructor = 3
     }
 
     public class Registeraionmodel
@@ -33,10 +35,12 @@ namespace WebApplication1.Models
         [Required(ErrorMessage = "Birthday is required")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
-        [Required(ErrorMessage = "Phonee number is required")]
+
+        [Required(ErrorMessage = "Phone number is required")]
         public int PhoneNumber { get; set; }
 
         public int PhoneNumber2 { get; set; }
+
         [Required(ErrorMessage = "Gender is required")]
         public string Gender { get; set; }
 
@@ -48,5 +52,10 @@ namespace WebApplication1.Models
 
         [Required(ErrorMessage = "Account type is required")]
         public AccountType AccountType { get; set; }
+
+        public string ExpertiseAreas { get; set; }
+        public string Qualifications { get; set; }
+
+        public List<string> AdditionalEmails { get; set; } = new List<string>();
     }
 }

@@ -1,0 +1,19 @@
+﻿@model LearningGoal
+
+<h2>Add Learning Goal</h2>
+
+<form asp-action="AddLearningGoal" method="post">
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <input type="text" class="form-control" id="Description" name="Description" />
+    </div>
+    <div class="form-group">
+        <label for="Deadline">Deadline</label>
+        <input type="date" class="form-control" id="Deadline" name="Deadline" />
+    </div>
+    <div class="form-group">
+        <label for="Status">Status</label>
+        <input type="text" class="form-control" id="Status" name="Status" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Goal</button>
+</form>

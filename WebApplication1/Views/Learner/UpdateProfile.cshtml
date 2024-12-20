@@ -1,0 +1,35 @@
+﻿@model UpdateProfileViewModel
+
+<h2>Update Profile</h2>
+
+<form asp-action="UpdateProfile" method="post">
+    <div class="form-group">
+        <label for="Fullname">Fullname</label>
+        <input type="text" class="form-control" id="Fullname" name="Fullname" value="@Model.Fullname" />
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" readonly />
+    </div>
+    <div class="form-group">
+        <label for="Birthday">Birthday</label>
+        <input type="date" class="form-control" id="Birthday" name="Birthday" value="@Model.Birthday.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="form-group">
+        <label for="Gender">Gender</label>
+        <input type="text" class="form-control" id="Gender" name="Gender" value="@Model.Gender" />
+    </div>
+    <div class="form-group">
+        <label for="PhoneNumber">Phone Number</label>
+        <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" />
+    </div>
+    <div class="form-group">
+        <label for="PhoneNumber2">Alternate Phone Number</label>
+        <input type="text" class="form-control" id="PhoneNumber2" name="PhoneNumber2" value="@Model.PhoneNumber2" />
+    </div>
+    <div class="form-group">
+        <label for="CountryOfOrigin">Country of Origin</label>
+        <input type="text" class="form-control" id="CountryOfOrigin" name="CountryOfOrigin" value="@Model.CountryOfOrigin" />
+    </div>
+    <button type="submit" class="btn btn-primary">Update Profile</button>
+</form>
